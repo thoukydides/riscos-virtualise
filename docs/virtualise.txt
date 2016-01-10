@@ -1,0 +1,77 @@
+File        : virtualise.txt
+Date        : 14-Dec-99
+Author      : © A.Thoukydides, 1995, 1996, 1997, 1998, 1999, 2016
+Description : Introduction to the documentation for Virtualise.
+
+License     : Virtualise is free software: you can redistribute it and/or
+              modify it under the terms of the GNU General Public License as
+              published by the Free Software Foundation, either version 3 of
+              the License, or (at your option) any later version.
+
+              Virtualise is distributed in the hope that it will be useful,
+              but WITHOUT ANY WARRANTY; without even the implied warranty of
+              MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+              GNU General Public License for more details.
+
+              You should have received a copy of the GNU General Public License
+              along with Virtualise. If not, see<http://www.gnu.org/licenses/>.
+
+
+INTRODUCTION     
+
+The Virtualise system provides a limited form of virtual memory for RiscPC
+dynamic areas. It is composed of two parts: A module which actually provides
+the virtual memory, and a front-end which provides an easy to use interface
+to most of the features.
+
+The main features are:
+
+    Simple to use WIMP front-end application to control virtual memory.
+    The memory usage can be controlled using the bar in the Task Manager.
+    Any number of virtual dynamic areas can be created and managed.
+    Can create virtual dynamic areas larger than the amount of physical memory.
+    Any dynamic area can be converted to/from virtual memory at any time.
+    Supports draggable virtual dynamic areas and those with handlers.
+    Intercepts OS SWIs to minimize changes required to existing applications.
+    Supports memory accesses from USR26 and SVC26 modes.
+    Pages may be locked to allow access from interrupt routines.
+    Parameters for file operations are automatically locked and unlocked.
+    File accesses transparently split to allow operations larger than memory.
+    Handles all processor instructions, including coprocessor data transfer.
+    Does not affect other programs that use processor hardware vectors.
+    Global page allocation policy across all virtual dynamic areas.
+    Choice of page replacement policies: NFU with ageing, FIFO or random.
+    Whole WIMP tasks can be suspended and swapped to disc.
+
+Read the "tutorial.txt" file for a quick introduction to using Virtualise. The
+other parts of the documentation are described below.
+
+
+LIST OF DOCUMENTATION
+
+The other files in this directory are:
+
+    frontend.txt    Description of the WIMP front-end "!Virtualis".
+    
+    glossary.txt    An explanation of some of the words, terms and
+                    abbreviations used in this documentation.
+
+    module.txt      Details about using and controlling the Virtualise module
+                    without the front-end. This also includes some technical
+                    details about how the virtual memory operates.
+    
+    products.txt    Contains information about the use of virtual memory with
+                    specific products.
+
+    swis.txt        Description of the SWI interface to the Virtualise module.
+                    This is only of relevance to programmers wishing to include
+                    support for virtual memory in their own software.
+
+    tutorial.txt    A simple introduction to some of the more useful features
+                    of the WIMP front-end.
+
+    versions.txt    The version history for the Virtualise module and
+                    front-end. Read this if you are upgrading from an earlier
+                    version to discover what has changed.
+                
+    virtualise.txt  This file.

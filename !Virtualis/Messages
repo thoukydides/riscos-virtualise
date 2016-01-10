@@ -1,0 +1,43 @@
+#   File        : Messages
+#   Date        : 14-Dec-99
+#   Author      : © A.Thoukydides, 1995, 1996, 1997, 1998, 1999, 2016
+#   Description : Text messages for the !Virtualis.
+#
+#   License     : Virtualise is free software: you can redistribute it and/or
+#                 modify it under the terms of the GNU General Public License
+#                 as published by the Free Software Foundation, either
+#                 version 3 of the License, or (at your option) any later
+#                 version.
+#
+#                 Virtualise is distributed in the hope that it will be useful,
+#                 but WITHOUT ANY WARRANTY; without even the implied warranty
+#                 of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+#                 the GNU General Public License for more details.
+#
+#                 You should have received a copy of the GNU General Public
+#                 License along with Virtualise. If not, see
+#                 <http://www.gnu.org/licenses/>.
+
+# Task name and version string
+_TaskName:Virtualise
+Version: 1.17 (14-Dec-99)
+
+# Serious error handling
+SigBut:Continue,Quit
+SigTpl:%0 Click Continue to attempt to carry on, or Quit to exit immediately.
+SigFPE:An arithmetic exception has occurred.
+SigIll:An illegal instruction has been executed.
+SigSegV:A bad memory access has occurred.
+SigStak:A stack overflow has occurred.
+SigErr:An unexpected error has occurred: %0
+SigUnk:An unexpected error has occurred.
+
+# Problems with modifying applications
+NotArea:To modify an application, it is first necessary to select the dynamic areas for which virtual memory should be enabled within the dynamic area list window.
+NotMod:The application has not been modified, so it is not necessary to restore it
+FailRun:Unable to write new application !Run file. The original has been restored.
+FailRun2:Unable to write the new application !Run file. It has not been possible to restore the original.
+
+# Yes and no indicators
+Yes:Y
+No:

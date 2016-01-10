@@ -1,0 +1,392 @@
+#   File        : MakeFile
+#   Date        : 23-Aug-99
+#   Author      : © A.Thoukydides, 1995, 1996, 1997, 1998, 1999, 2016
+#   Description : Makefile for dynamic area virtual memory manager module and
+#                 wimp front-end application.
+#
+#   License     : Virtualise is free software: you can redistribute it and/or
+#                 modify it under the terms of the GNU General Public License
+#                 as published by the Free Software Foundation, either
+#                 version 3 of the License, or (at your option) any later
+#                 version.
+#
+#                 Virtualise is distributed in the hope that it will be useful,
+#                 but WITHOUT ANY WARRANTY; without even the implied warranty
+#                 of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+#                 the GNU General Public License for more details.
+#
+#                 You should have received a copy of the GNU General Public
+#                 License along with Virtualise. If not, see
+#                 <http://www.gnu.org/licenses/>.
+
+# Include path:
+IncludePath     = ,C:,OS:,OSLibSupport:,AT:
+
+# Tool flags:
+CCflags         = -c -depend !Depend -I$(IncludePath) -throwback -afh
+C++flags        = +g -c -depend !Depend -I$(IncludePath) \
+                  -throwback -af -D__swi \
+#                  -DDEMO
+Linkflags       = -c++ -o $@ \
+#                  -debug
+ObjAsmflags     = -G -nowarn -depend !Depend -I$(IncludePath) -throwback \
+#                  -PreDefine "demo SETL {TRUE}"
+CMHGflags       =
+Squeezeflags    = -f -v -o $@
+
+# Object files:
+LibraryFiles    = AT:o.alexlib OSLibSupport:o.OSLibSupport OSLib:o.OSLib \
+                  C:o.c++lib C:o.Stubs
+AppFiles        = o.configure o.faults o.list o.main o.status \
+                  o.demo o.database o.automatic o.tasks o.virtual
+ModuleFiles     = o.virtualise
+
+# Target directory:
+DestDir         = ^.!Virtualis
+
+# Final targets:
+
+all:        $(DestDir).!RunImage $(DestDir).Virtualise \
+
+$(DestDir).!RunImage: \
+            $(AppFiles)
+            link -aif $(LinkFlags) $(LibraryFiles) $(AppFiles)
+            squeeze $(SqueezeFlags) $@
+
+$(DestDir).Virtualise: \
+            $(ModuleFiles)
+            link -bin $(LinkFlags) $(ModuleFiles)
+            settype $@ Module
+
+# General rules:
+.SUFFIXES:  .o .s .h .c .c++ .cmhg
+.c.o:;      cc $(CCflags) -o $@ c.$*
+.c++.o:;    c++ $(C++flags) -o $@ c++.$*
+.s.o:;      objasm $(ObjAsmflags) -o $@ s.$*
+.cmhg.o:;   cmhg $(CMHGflags) cmhg.$* $@ h.$*
+.cmhg.h:;   cmhg $(CMHGflags) cmhg.$* o.$* $@
+
+# Dynamic dependencies:
+o.vmswis: s.vmswis
+o.vmswis: OS:Hdr.Macros
+o.vmswis: OS:Hdr.OS
+o.vmswis: OS:Hdr.Types
+o.vmswis: AT:Hdr.macros
+o.demo:	c++.demo
+o.copy:	c++.copy
+o.copy:	h.copy
+o.copy:	C:h.adfs
+o.copy:	C:h.types
+o.copy:	C:h.os
+o.copy:	C:h.filecore
+o.copy:	C:h.fileswitch
+o.copy:	C:h.hourglass
+o.copy:	C:h.filecore
+o.copy:	C:h.osfile
+o.copy:	C:h.osfscontrol
+o.copy:	h.main
+o.copy:	C:h.messagetrans
+o.copy:	C:h.toolbox
+o.copy:	C:h.wimp
+o.copy:	C:h.osspriteop
+o.copy:	C:h.font
+o.copy:	C:h.wimp
+o.copy:	h.demo
+o.copy:	C:h.filecore
+o.copy:	C:h.os
+o.copy:	C:h.proginfo
+o.copy:	C:h.window
+o.copy:	C:h.keyboardshortcut
+o.copy:	C:h.gadget
+o.copy:	C:h.toolbox
+o.copy:	C:h.wimp
+o.database:	c++.database
+o.database:	h.database
+o.database:	C:h.menu
+o.database:	C:h.types
+o.database:	C:h.toolbox
+o.database:	C:h.os
+o.database:	C:h.wimp
+o.database:	C:h.osspriteop
+o.database:	C:h.font
+o.database:	C:h.messagetrans
+o.database:	C:h.toolbox
+o.database:	C:h.fstream
+o.database:	C:h.iostream
+o.database:	C:h.memory
+o.database:	C:h.osfile
+o.database:	C:h.fileswitch
+o.database:	h.configure
+o.database:	C:h.toolbox
+o.database:	C:h.event
+o.virtual: s.virtual
+o.virtual: OS:Hdr.Macros
+o.virtual: OS:Hdr.OS
+o.virtual: OSLibInclude:Hdr.Types
+o.virtual: AT:Hdr.macros
+o.virtualise: s.virtualise
+o.virtualise: OS:Hdr.FileSwitch
+o.virtualise: OSLibInclude:Hdr.Types
+o.virtualise: OSLibInclude:Hdr.OS
+o.virtualise: OS:Hdr.Filter
+o.virtualise: OSLibInclude:Hdr.WIMP
+o.virtualise: OSLibInclude:Hdr.OSSpriteOp
+o.virtualise: OSLibInclude:Hdr.Font
+o.virtualise: OS:Hdr.Hourglass
+o.virtualise: OS:Hdr.Macros
+o.virtualise: OS:Hdr.MessageTrans
+o.virtualise: OS:Hdr.OS
+o.virtualise: OS:Hdr.OSArgs
+o.virtualise: OS:Hdr.OSByte
+o.virtualise: OS:Hdr.OSFile
+o.virtualise: OS:Hdr.OSFind
+o.virtualise: OS:Hdr.OSFSControl
+o.virtualise: OS:Hdr.OSGBPB
+o.virtualise: OS:Hdr.OSHeap
+o.virtualise: OS:Hdr.OSModule
+o.virtualise: OS:Hdr.ResourceFS
+o.virtualise: OS:Hdr.TaskManager
+o.virtualise: OS:Hdr.Types
+o.virtualise: OS:Hdr.Wimp
+o.virtualise: OS:Hdr.WimpSpriteOp
+o.virtualise: AT:Hdr.macros
+o.main:	c++.main
+o.main:	h.main
+o.main:	C:h.messagetrans
+o.main:	C:h.types
+o.main:	C:h.os
+o.main:	C:h.toolbox
+o.main:	C:h.wimp
+o.main:	C:h.osspriteop
+o.main:	C:h.font
+o.main:	C:h.wimp
+o.main:	h.demo
+o.main:	C:h.kernel
+o.main:	C:h.button
+o.main:	C:h.gadget
+o.main:	C:h.gadget
+o.main:	C:h.iconbar
+o.main:	C:h.proginfo
+o.main:	C:h.window
+o.main:	C:h.keyboardshortcut
+o.main:	C:h.quit
+o.main:	C:h.wimp
+o.main:	C:h.wimpspriteop
+o.main:	C:h.event
+o.main:	h.automatic
+o.main:	C:h.toolbox
+o.main:	C:h.event
+o.main:	h.configure
+o.main:	C:h.toolbox
+o.main:	C:h.event
+o.main:	h.database
+o.main:	C:h.menu
+o.main:	C:h.toolbox
+o.main:	h.demo
+o.main:	h.faults
+o.main:	C:h.toolbox
+o.main:	h.list
+o.main:	C:h.toolbox
+o.main:	C:h.event
+o.main:	C:h.filecore
+o.main:	C:h.fileswitch
+o.main:	C:h.os
+o.main:	C:h.proginfo
+o.main:	C:h.toolbox
+o.main:	C:h.wimp
+o.main:	h.tasks
+o.main:	C:h.toolbox
+o.main:	C:h.event
+o.automatic:	c++.automatic
+o.automatic:	h.automatic
+o.automatic:	C:h.toolbox
+o.automatic:	C:h.types
+o.automatic:	C:h.os
+o.automatic:	C:h.wimp
+o.automatic:	C:h.osspriteop
+o.automatic:	C:h.font
+o.automatic:	C:h.messagetrans
+o.automatic:	C:h.event
+o.automatic:	C:h.fstream
+o.automatic:	C:h.iostream
+o.automatic:	C:h.memory
+o.automatic:	C:h.actionbutton
+o.automatic:	C:h.gadget
+o.automatic:	C:h.button
+o.automatic:	C:h.displayfield
+o.automatic:	C:h.gadget
+o.automatic:	C:h.menu
+o.automatic:	C:h.numberrange
+o.automatic:	C:h.optionbutton
+o.automatic:	C:h.os
+o.automatic:	C:h.osfile
+o.automatic:	C:h.fileswitch
+o.automatic:	C:h.osfscontrol
+o.automatic:	C:h.radiobutton
+o.automatic:	C:h.window
+o.automatic:	C:h.keyboardshortcut
+o.automatic:	C:h.wimp
+o.automatic:	C:h.wimpspriteop
+o.automatic:	h.configure
+o.automatic:	C:h.toolbox
+o.automatic:	C:h.event
+o.automatic:	h.database
+o.automatic:	C:h.menu
+o.automatic:	C:h.toolbox
+o.automatic:	h.main
+o.automatic:	C:h.messagetrans
+o.automatic:	C:h.toolbox
+o.automatic:	C:h.wimp
+o.automatic:	h.demo
+o.configure:	c++.configure
+o.configure:	h.configure
+o.configure:	C:h.toolbox
+o.configure:	C:h.types
+o.configure:	C:h.os
+o.configure:	C:h.wimp
+o.configure:	C:h.osspriteop
+o.configure:	C:h.font
+o.configure:	C:h.messagetrans
+o.configure:	C:h.event
+o.configure:	C:h.fstream
+o.configure:	C:h.iostream
+o.configure:	C:h.memory
+o.configure:	C:h.actionbutton
+o.configure:	C:h.gadget
+o.configure:	C:h.draggable
+o.configure:	C:h.window
+o.configure:	C:h.keyboardshortcut
+o.configure:	C:h.fileswitch
+o.configure:	C:h.iconbar
+o.configure:	C:h.macros
+o.configure:	C:h.menu
+o.configure:	C:h.numberrange
+o.configure:	C:h.osfile
+o.configure:	C:h.osfscontrol
+o.configure:	C:h.optionbutton
+o.configure:	C:h.osgbpb
+o.configure:	C:h.radiobutton
+o.configure:	C:h.stringset
+o.configure:	C:h.wimpspriteop
+o.configure:	C:h.writablefield
+o.configure:	h.main
+o.configure:	C:h.messagetrans
+o.configure:	C:h.toolbox
+o.configure:	C:h.wimp
+o.configure:	h.demo
+o.configure:	h.virtual
+o.configure:	C:h.os
+o.configure:	C:h.wimp
+o.faults:	c++.faults
+o.faults:	h.faults
+o.faults:	C:h.toolbox
+o.faults:	C:h.types
+o.faults:	C:h.os
+o.faults:	C:h.wimp
+o.faults:	C:h.osspriteop
+o.faults:	C:h.font
+o.faults:	C:h.messagetrans
+o.faults:	C:h.displayfield
+o.faults:	C:h.gadget
+o.faults:	C:h.event
+o.faults:	h.virtual
+o.faults:	C:h.os
+o.faults:	C:h.wimp
+o.list:	c++.list
+o.list:	h.list
+o.list:	C:h.toolbox
+o.list:	C:h.types
+o.list:	C:h.os
+o.list:	C:h.wimp
+o.list:	C:h.osspriteop
+o.list:	C:h.font
+o.list:	C:h.messagetrans
+o.list:	C:h.event
+o.list:	C:h.fstream
+o.list:	C:h.iostream
+o.list:	C:h.memory
+o.list:	C:h.actionbutton
+o.list:	C:h.gadget
+o.list:	C:h.button
+o.list:	C:h.displayfield
+o.list:	C:h.gadget
+o.list:	C:h.menu
+o.list:	C:h.numberrange
+o.list:	C:h.optionbutton
+o.list:	C:h.os
+o.list:	C:h.osfile
+o.list:	C:h.fileswitch
+o.list:	C:h.osfscontrol
+o.list:	C:h.radiobutton
+o.list:	C:h.window
+o.list:	C:h.keyboardshortcut
+o.list:	C:h.wimp
+o.list:	C:h.wimpspriteop
+o.list:	h.database
+o.list:	C:h.menu
+o.list:	C:h.toolbox
+o.list:	h.demo
+o.list:	h.main
+o.list:	C:h.messagetrans
+o.list:	C:h.toolbox
+o.list:	C:h.wimp
+o.list:	h.demo
+o.list:	h.status
+o.list:	C:h.os
+o.list:	C:h.toolbox
+o.list:	C:h.wimp
+o.list:	h.virtual
+o.list:	C:h.os
+o.list:	C:h.wimp
+o.list:	h.virtual
+o.status:	c++.status
+o.status:	h.status
+o.status:	C:h.os
+o.status:	C:h.types
+o.status:	C:h.toolbox
+o.status:	C:h.wimp
+o.status:	C:h.osspriteop
+o.status:	C:h.font
+o.status:	C:h.messagetrans
+o.status:	C:h.wimp
+o.status:	h.virtual
+o.status:	C:h.os
+o.status:	C:h.wimp
+o.status:	C:h.actionbutton
+o.status:	C:h.gadget
+o.status:	C:h.displayfield
+o.status:	C:h.menu
+o.status:	C:h.toolbox
+o.status:	C:h.window
+o.status:	C:h.keyboardshortcut
+o.status:	C:h.event
+o.status:	h.virtual
+o.tasks:	c++.tasks
+o.tasks:	h.tasks
+o.tasks:	C:h.toolbox
+o.tasks:	C:h.types
+o.tasks:	C:h.os
+o.tasks:	C:h.wimp
+o.tasks:	C:h.osspriteop
+o.tasks:	C:h.font
+o.tasks:	C:h.messagetrans
+o.tasks:	C:h.event
+o.tasks:	C:h.button
+o.tasks:	C:h.gadget
+o.tasks:	C:h.displayfield
+o.tasks:	C:h.gadget
+o.tasks:	C:h.os
+o.tasks:	C:h.taskmanager
+o.tasks:	h.virtual
+o.tasks:	C:h.os
+o.tasks:	C:h.wimp
+o.tasks:	C:h.window
+o.tasks:	C:h.keyboardshortcut
+o.tasks:	C:h.wimp
+o.tasks:	C:h.wimpspriteop
+o.tasks:	h.demo
+o.tasks:	h.main
+o.tasks:	C:h.messagetrans
+o.tasks:	C:h.toolbox
+o.tasks:	C:h.wimp
+o.tasks:	h.demo

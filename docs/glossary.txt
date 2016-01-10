@@ -1,0 +1,79 @@
+File        : glossary.txt
+Date        : 14-Dec-99
+Author      : © A.Thoukydides, 1995, 1996, 1997, 1998, 1999, 2016
+Description : An explanation of some of the words, terms and abbreviations
+              used in this documentation.
+
+License     : Virtualise is free software: you can redistribute it and/or
+              modify it under the terms of the GNU General Public License as
+              published by the Free Software Foundation, either version 3 of
+              the License, or (at your option) any later version.
+
+              Virtualise is distributed in the hope that it will be useful,
+              but WITHOUT ANY WARRANTY; without even the implied warranty of
+              MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+              GNU General Public License for more details.
+
+              You should have received a copy of the GNU General Public License
+              along with Virtualise. If not, see<http://www.gnu.org/licenses/>.
+
+
+Binary - A two-state system which can be represented by the digits 0 and 1.
+    Digital computers perform information processing, store data and transmit
+    information as binary digits.
+
+Bit - Abbreviation for BInary digiT. It is a unit of storage which can takes
+    the values 0 or 1.
+
+Byte - A group of 8 bits. This is generally the amount of memory required to
+    store a single character.
+
+Data - Synonymous with information but generally used for the representation
+    and processing of information by a computer system.
+
+Dynamic area - A dynamic area is a named area of memory created by an
+    application. The Tasks window obtained by clicking SELECT on the Acorn
+    icon on the icon-bar lists the dynamic areas at the bottom of the window.
+
+Hexadecimal - Numbers in base 16. The digits are 0123456789ABCDEF, where "A"
+    to "F" represent the values 10 to 15.
+
+Interrupt - When the control unit stops processing to handle some external
+    need, such as performing an input/output task.
+
+Logical address - This is the address that the programs running in the
+    computer use to access memory. The hardware in the computer converts the
+    logical address into a physical address when required. When virtual
+    memory is being used the mapping between logical and physical memory is
+    frequently updated as different areas of memory are accessed.
+
+kB - Abbreviation for kilobyte. This is equivalent to 1024 (2^10) bytes.
+
+MB - Abbreviation for megabyte. This is equivalent to 1,048,576 (1024 * 1024
+    = 2^20) bytes. This is sometimes used more approximately to refer to 1
+    million bytes.
+
+Operating system - Essential systems software which coordinates and controls
+    the use of the system's resources. In the Risc PC this is called RISC OS.
+
+Page fault - An access to a page of memory which is not present at that time
+    results in an abort on data transfer exception being raised. This is
+    termed a page fault.
+
+Physical address - This is the address that is actually used to access a
+    particular section of the memory in the hardware of the computer. A
+    physical address always references the same part of the same memory chip.
+
+RAM - Random Access Memory. This is the main memory on a chip which allows
+    data to be stored and modified; read/write memory is a more apt
+    description.
+
+Virtual memory - This is a system which enables disc space to be used to
+    simulate extra RAM. It is usually provided as a feature of the operating
+    system.
+
+VM - Abbreviation for Virtual Memory.
+
+WIMP - Abbreviation for Windows Icons Menus Pointer. This is a generic term
+    for the graphical interface to the computer. On the RiscPC it is sometimes
+    called the Desktop.

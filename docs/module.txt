@@ -1,0 +1,147 @@
+File        : module.txt
+Date        : 14-Dec-99
+Author      : © A.Thoukydides, 1995, 1996, 1997, 1998, 1999, 2016
+Description : Details about using and controlling the "Virtualise" module
+              without the front-end. This also includes some technical details
+              about how the virtual memory operates.
+
+License     : Virtualise is free software: you can redistribute it and/or
+              modify it under the terms of the GNU General Public License as
+              published by the Free Software Foundation, either version 3 of
+              the License, or (at your option) any later version.
+
+              Virtualise is distributed in the hope that it will be useful,
+              but WITHOUT ANY WARRANTY; without even the implied warranty of
+              MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+              GNU General Public License for more details.
+
+              You should have received a copy of the GNU General Public License
+              along with Virtualise. If not, see<http://www.gnu.org/licenses/>.
+
+
+INTRODUCTION
+
+The "Virtualise" module may be used independently of the front-end to implement
+virtual memory for Risc PC dynamic areas. It is not necessary to read this
+file to use virtual memory with software written by other author's, but it
+does give a better understanding of how the virtual memory system operates.
+
+The main interface to this module is through the SWIs described in the
+"swis.txt" file. However, there is another technique that can be utilised to
+get existing applications to use virtual memory without modification which is
+described in the "SYSTEM VARIABLES" section below. There are also a couple of
+*commands which are covered in the "COMMAND LINE INTERFACE" section.
+
+
+RESTRICTIONS
+
+Swapping of memory to/from disc will only occur for instructions executed in
+USR26 or SVC26 modes. In addition, reentrant behaviour is not available. If
+any of these conditions are not met then the previous Data abort handler will
+be called.
+
+If it is necessary to access the virtual memory in one of these situations
+(such as an interrupt routine) then the relevant section must be locked
+whilst in either USR26 or SVC26 mode. This includes access from code that may
+be called externally under unpredictable circumstances, e.g. SWIs.
+
+The main reason for these apparently limiting restrictions is due to the fact
+that FileCore (which most RISC OS filing systems are based on) is not
+re-entrant. This prevents pages being swapped to/from disc during another
+file system operation. Under the excluded conditions described above it is
+not possible to guarantee that it will not be necessary to swap data
+to/from disc during a foreground file operation.
+
+In practice these restrictions are rarely a problem; very few programs access
+data in dynamic areas from any on these situations.
+
+
+SYSTEM VARIABLES
+
+When a dynamic area is created, and bit 31 of the area flags is not set, a
+system variable called "Virtualise$Area_<area name>" is checked, where
+"<area name>" is the name of the dynamic area being created with the
+characters " ", "#" and "*" replaced by "_". If the variable exists, and it
+is numeric (created with *SetEval), then virtual memory is automatically
+enabled for the area and the maximum area size is set to the specified value
+in megabytes.
+
+The location of the swap files is specified by the "Virtualise$SwapDir"
+system variable. This defaults to the macro "<Wimp$ScrapDir>.Virtualise.",
+but may be changed at any time. A new value only affects areas which have
+virtual memory enabled after the change; existing swap files are not moved.
+In addition, this value is only used if a filename is not specified to
+Virtualise_Start when virtual memory is enabled.
+
+The configuration files are accessed via the variable "Virtualise$ConfigDir".
+By default this is set to "<Choices$Write>.Virtualise", but it may be useful
+to change this when using Virtualise over a network.
+
+Finally, it is possible to change the "Messages" file used by the Virtualise
+module by changing the value of "Virtualise$Path". The default message file
+is stored within the module and installed in
+"Resources:$.Resources.Virtualise". If a new file is used then the system
+variable must be set before the Virtualise module is loaded, and exactly the
+same tokens must be defined (although the order does not matter).
+
+
+ERRORS
+
+The Virtualise module uses the Acorn allocated error chunk starting at
+&80E100. However, the actual error numbers used within this range have not
+been fixed; they are likely to change in future releases of the module.
+
+
+COMMAND LINE INTERFACE
+
+*VirtualStats
+
+    No arguments are allowed. This displays some statistics about the current
+    state and past behaviour of the virtual memory system.
+    
+    Note that if a floating point emulator is being used then page faults
+    caused by the coprocessor data transfer instructions will actually be
+    generated by the normal processor instructions contained in the emulator
+    code.
+    
+    This command could (safely) abort prematurely if used in a taskwindow.
+    
+
+*VirtualPages
+
+    No arguments are allowed. This lists details of all the physical pages
+    currently assigned to this module. The columns of data are:
+    
+        Index       Internal page number.
+        Page        Physical page number.
+        Area        Dynamic area number if page is used for virtual memory.
+        Offset      Page offset if page is used for virtual memory.
+        Locks       Number of times page locked.
+        Original    Original address of page.
+        Current     Current address of page.
+        Prot        Access protection of page.
+        Accesses    A measure of how frequently the page has been accessed.
+
+    The interpretation of the access count depends upon the requirements of
+    the page replacement policy being used.
+    
+    Note that this can be an extremely long list, and is unlikely to be of
+    interest to most people.
+    
+    This command could (safely) abort prematurely if used in a taskwindow.
+
+
+*VirtualCheck
+
+    No arguments are allowed. This performs a comprehensive consistency
+    check of the internal Virtualise data structure, and reports the
+    result.
+    
+    This command can be useful after an application has crashed to ensure
+    that the virtual memory system is reliable.
+
+
+*Desktop_Virtualise
+
+    This is for the internal use of the "!Virtualis" front-end, and should
+    not be used.

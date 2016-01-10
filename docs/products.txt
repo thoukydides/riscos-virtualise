@@ -1,0 +1,64 @@
+File        : products.txt
+Date        : 23-Aug-99
+Author      : © A.Thoukydides, 1995, 1996, 1997, 1998, 1999, 2016
+Description : Information about the use of virtual memory with specific
+              products.
+
+License     : Virtualise is free software: you can redistribute it and/or
+              modify it under the terms of the GNU General Public License as
+              published by the Free Software Foundation, either version 3 of
+              the License, or (at your option) any later version.
+
+              Virtualise is distributed in the hope that it will be useful,
+              but WITHOUT ANY WARRANTY; without even the implied warranty of
+              MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+              GNU General Public License for more details.
+
+              You should have received a copy of the GNU General Public License
+              along with Virtualise. If not, see<http://www.gnu.org/licenses/>.
+
+
+The "!Virtualis" front-end will help you use virtual memory with application
+which do not "know" about the module. However, some applications already have
+support for Virtualise built in. At the time of writing these are:
+
+    ProArtisan 24               1v02
+    Composition                 1v02
+
+These programs have dialogue boxes which allow configuration of the virtual
+memory system. You do not need to use the !Virtualis front-end to make them
+use virtual memory.
+
+Some of the other applications that allow Virtualise to be used include:
+
+    ArcWeb                      1v44
+    ChangeFSI                   1v12
+    EasyWriter Professional
+    FontDirectory 2
+    GNU C Compiler
+    Grid Pro
+    ImageFS 2
+    Impression Style            3v05
+    Impression Publisher        4v05
+    Impression Publisher+       5v05
+    Ovation
+    OvationPro                  1v00
+    Schema 2                    1v04
+    Serenade                    1v10
+    SparkFS
+    TechWriter Professional
+    TopModel                    1v11
+    UnixLib                     3v7a
+    Zap
+
+Earlier versions of Composition will have problems loading files if you
+virtualise it. You can virtualise ProArtisan 24 1v01 using the front-end.
+
+Some applications do not create a dynamic area until a document is loaded.
+!ChangeFSI is one of these. To virtualise these you need to load a file
+before using the front-end.
+
+PLEASE NOTE: Some versions of !ChangeFSI have a problem loading pictures
+which are bigger than 32MB. This can result in a crash, but is not a problem
+with Virtualise. It will happen on machines with sufficient RAM, whether
+Virtualise is present or not.

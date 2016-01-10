@@ -1,0 +1,449 @@
+File        : swis.txt
+Date        : 14-Dec-99
+Author      : © A.Thoukydides, 1995, 1996, 1997, 1998, 1999, 2016
+Description : Description of the SWIs provided by the "Virtualise" module.
+
+License     : Virtualise is free software: you can redistribute it and/or
+              modify it under the terms of the GNU General Public License as
+              published by the Free Software Foundation, either version 3 of
+              the License, or (at your option) any later version.
+
+              Virtualise is distributed in the hope that it will be useful,
+              but WITHOUT ANY WARRANTY; without even the implied warranty of
+              MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+              GNU General Public License for more details.
+
+              You should have received a copy of the GNU General Public License
+              along with Virtualise. If not, see<http://www.gnu.org/licenses/>.
+
+
+INTRODUCTION
+
+The Virtualise module can be controlled directly via a number of SWIs
+(SoftWare Interrupts). These are described in detail below. However, they are
+really only required by programs which offer control over how virtual memory
+is used; just using the module to provide virtual memory for other authors'
+software does not require use or knowldedge of these SWIs.
+
+The interface is logically split into two parts: existing RISC OS calls whose
+behaviour has been modified, and new SWIs provided by the module.
+
+
+CHANGES TO OPERATING SYSTEM SWIS
+
+SWI "OS_DynamicArea" (&66)
+
+    This SWI has been extended to allow dynamic areas larger than physical
+    RAM to be created, and to return the logical size of the area rather than
+    the physical size.
+    
+    An extra area flag has been defined:
+    
+        Bit Meaning
+        31  Virtual memory is active for dynamic area. If this bit is set
+            when the area is created then virtual memory is activated
+            immediately. Note that no error is produced if it is not possible
+            to start virtual memory for the new dynamic area.
+
+    Note that reading this flag bit only gives meaningful results if the
+    Virtualise module is loaded at the time. This is because the OS is
+    perfectly happy to maintain and return this bit itself.
+
+    The area size may be specified to be larger than the amount of RAM in the
+    computer, up to a limit of 256MB. However, if -1 is specified for the
+    maximum size of the area then the maximum size is set to the limit set
+    using Virtualise_Configure (by default the amount of physical RAM (as at
+    present). The maximum may be specified larger than the RAM size even if
+    virtual memory is not being started initially. If Virtualise_Start is
+    later used then the virtual memory will be able to utilise all the of the
+    allocated address space.
+    
+    One important point to note is that there is only 3.5GB of address space
+    available in the machine. This can soon get used up if all applications
+    ask for the maximum possible of 256MB. This problem is made worse by a
+    bug in Filecore which fails with top bit set addresses (over 2GB). Other
+    applications, such as !ChangeFSI, sometimes fall over at even lower
+    addresses.
+
+
+SWI "OS_ChangeDynamicArea" (&2A)
+
+    If used on an area that has virtual memory active this SWI adjusts the
+    logical size of the area, otherwise the physical size is adjusted. In
+    practice this means that this call can be used by the application without
+    worrying whether virtual memory is active.
+
+
+SWI "OS_ReadDynamicArea" (&5C)
+
+    If used on an area that has virtual memory active this SWI reads the
+    logical size of the area, otherwise the behaviour is the same as before.
+    In practice this means that this call can be used by the application
+    without worrying whether virtual memory is active.
+
+
+SWIS PROVIDED BY VIRTUALISE
+
+The SWI chunk starting at &4B6C0 has been officially allocated by Acorn for
+use by this module.
+
+SWI "Virtualise_Configure" (&4B6C0)
+
+    Configure logical and physical memory usage.
+
+    On entry:
+    
+        R0 = Set the amount of logical address space, in bytes, allocated for
+             dynamic areas when -1 is passed to OS_DynamicArea 0, or -1 to
+             read current value.
+        R1 = Amount of memory to claim automatically, in bytes, or -1 to read
+             current value.
+        R2 = Amount of memory to leave free, in bytes, or -1 to read current
+             value.
+
+    On exit:
+    
+        R0 = The size of address space to allocate.
+        R1 = The amount of memory to claim, in bytes.
+        R2 = The amount of memory to leave free, in bytes.
+
+    Interrupts:
+
+        Interrupt status is undefined.
+        Fast interrupts are enabled.
+
+    Processor mode:
+
+        Processor is in SVC mode.
+    
+    Re-entrancy:
+
+        SWI is not re-entrant.
+
+    Use:
+    
+        This call provides control over how much real memory to claim, and
+        how much to leave free. These values are only treated as guidelines.
+        In particular the user may drag the bar in the Task Manager or the
+        specified values may lie outside the range of required or useful
+        memory.
+        
+        Do not rely on any particular default values. They may be altered by
+        another application, the configuration specified by the user, or they
+        could change in a future release of this module.
+        
+        The recommended way of using this call (if it is used at all) is to
+        include an option in the application configuration window for minimum
+        amount of memory to claim and minimum memory to leave free. When the
+        window is opened this call should be used to read the current
+        settings. When the user selects OK or Save this call should be used
+        to set the values. If the application saves a configuration then it
+        should call this SWI when it starts to set the required values. The
+        application should not normally set these values any more frequently
+        - it is likely to result in confusing behaviour for the user if more
+        that one application is using the virtual memory system.
+        
+        It is also possible to control how much address space is allocated
+        for dynamic area which are created with -1 passed for the maximum
+        size. This allows badly written programs to be used on machines with
+        a large memory without using ridiculously large sections of the
+        logical address space. This option should not normally be used by
+        applications themselves - it is intended for use by the user to
+        control wastage of logical address space by programs which are not
+        aware of virtual memory.
+        
+        Under RISC OS 4 and above it is recommended that OS_DynamicArea 8 is
+        used to clamp the size of dynamic areas.
+
+
+SWI "Virtualise_Start" (&4B6C1)
+
+    Start virtual memory in an existing dynamic area.
+
+    On entry:
+
+        R0 = The number of the dynamic area to virtualise.
+        R1 = Maximum size of area (reserved logical address space), or -1 to
+             use maximum size of the dynamic area.
+        R2 = Pointer to name to use for swap file. If this is a null pointer
+             then a name is chosen automatically.
+
+    On exit:
+
+        All registers preserved.
+
+    Interrupts:
+
+        Interrupts are enabled.
+        Fast interrupts are enabled.
+
+    Processor mode:
+
+        Processor is in SVC mode.
+    
+    Re-entrancy:
+
+        SWI is not re-entrant.
+
+    Use:
+    
+        After a dynamic area has been created using OS_DynamicArea 0 (as usual)
+        use this SWI to enable virtual memory.
+        
+        The initial size of the virtual memory is the same as the actual size
+        of the dynamic area; any data already in the area is copied into the
+        virtual memory. If there is no data in the area when virtual memory is
+        enabled then it would be more efficient to shrink the area to 0 size
+        before using this SWI, and to grow the virtual memory with
+        OS_ChangeDynamicArea afterwards.
+        
+        Normally virtual memory is restricted to being within the logical
+        address space of the dynamic area. However, if more contiguous
+        logical address space has been reserved it is possible to set R1 to
+        this value to allow its use. It should never be necessary to use this
+        option since the Virtualise module is capable of creating dynamic
+        areas with maximum sizes greater than the RAM size of the computer.
+
+        The swap file will normally be placed in the automatically created
+        directory <Virtualise$SwapDir>. This may be changed by specifying
+        a full pathname in R2. The variable <Virtualise$SwapDir> defaults to
+        <Wimp$ScrapDir>.Virtualise.
+        
+        Note that the following flags must be set:
+        
+            bit 4   0 - Area is bufferable
+            bit 5   0 - Area is cacheable
+            bit 6   0 - Area is singly mapped
+            bit 8   0 - Area does not require specific physical pages
+            bit 9   0 - Area is not shrinkable
+            bit 10  0 - Area is not sparse
+            bit 11  0 - Area is not bound to client
+
+        If the dynamic area has a handler routine then virtual memory can only
+        be enabled for it if this module was loaded when the area was created.
+
+
+SWI "Virtualise_End" (&4B6C2)
+
+    Disable virtual memory in a dynamic area.
+
+    On entry:
+
+        R0 = The number of the dynamic area to un-virtualise.
+    
+    On exit:
+
+        All registers preserved.
+
+    Interrupts:
+
+        Interrupts are enabled.
+        Fast interrupts are enabled.
+
+    Processor mode:
+
+        Processor is in SVC mode.
+    
+    Re-entrancy:
+
+        SWI is not re-entrant.
+
+    Use:
+
+        Use this SWI to disable virtual memory for a dynamic area. If virtual
+        memory is not active for the specified dynamic area then the call
+        returns without error.
+        
+        If any virtual memory is associated with the area then an attempt is
+        made to convert it into physical memory. If it is not possible to
+        claim sufficient memory then the SWI will return an error, and the
+        virtual memory will remain active.
+        
+        If the area contains pages locked using Virtualise_Lock then an error
+        will be produced, and the area will remain with virtual memory active.
+        
+        If the dynamic area is removed without virtual memory being first
+        disabled then this SWI is implicitly called, but no check is made
+        for locked pages. It is better to call this SWI explicitly to allow
+        more elaborate checks to be performed.
+
+
+SWI "Virtualise_Lock" (&4B6C3)
+
+    Lock pages of a dynamic area for which virtual memory has been enabled.
+    
+    On entry:
+    
+        R0 = Start of range of addresses to lock.
+        R1 = End of range of addresses to lock.
+    
+    On exit:
+    
+        All registers preserved.
+    
+    Interrupts:
+    
+        Interrupt status is undefined.
+        Fast interrupts are enabled.
+    
+    Processor mode:
+    
+        Processor is in SVC mode.
+        
+    Re-entrancy:
+    
+        SWI is not re-entrant.
+    
+    Use:
+    
+        This SWI allows an area of virtual memory to be locked in physical
+        memory. This enables the use of that area for interrupt routines,
+        and other cases which could otherwise lead to reentrancy of either
+        the virtual memory manager or the file system.
+        
+        All pages that are included in the range R0 to (R1-1) are locked.
+        This range must lie fully within the current size of a dynamic area
+        for which virtual memory has been enabled. A count of how many times a
+        page has been locked is maintained, and a page will only be unlocked
+        when the count reaches zero.
+        
+        Care should be taken when using this SWI to ensure that the minimum
+        possible number of pages are locked at any time, otherwise there may
+        not be sufficient physical memory available to provide the rest of
+        the virtual memory. It is advised that pages are locked for the
+        shortest possible period.
+        
+        It is possible to use this call to improve performance of the virtual
+        memory system by forcing particular pages to remain in memory.
+        However, this approach should only be used in rare circumstances
+        where the performance increase would be substantial. If possible,
+        locking pages in this manner should be a user configurable option.
+
+
+SWI "Virtualise_Unlock" (&4B6C4)
+    
+    Unlock pages of a dynamic area for which virtual memory has been enabled.
+    
+    On entry:
+    
+        R0 = Start of range of addresses to unlock.
+        R1 = End of range of addresses to unlock.
+    
+    On exit:
+    
+        All registers preserved.
+    
+    Interrupts:
+    
+        Interrupt status is undefined.
+        Fast interrupts are enabled.
+    
+    Processor mode:
+    
+        Processor is in SVC mode.
+        
+    Re-entrancy:
+    
+        SWI is not re-entrant.
+    
+    Use:
+    
+        This SWI unlocks pages that were previously locked with
+        Virtualise_Lock. Exactly the same values of R0 and R1 should be
+        used when unlocking pages as were used when they were originally
+        locked; unpredictable results might otherwise occur.
+
+
+SWI "Virtualise_MiscOp" (&4B6C5)
+
+    This is for the internal use of the "!Virtualis" front-end, and should
+    not be used.
+
+
+SWI "Virtualise_UserConfigure" (&4B6C6)
+
+    Configure the memory and disc usage.
+
+    On entry:
+    
+        R0 = Set the fraction of the logical virtual memory size to claim as
+             physical memory, or -1 to read the current value. This is a fixed
+             point value, with (1 << 15) corresponding to 100%.
+        R1 = Lower limit of memory to claim, below which all of the required
+             memory is claimed, or -1 to read the current value.
+        R2 = Upper limit of memory to claim, above which no more memory will
+             be claimed, or -1 to read the current value.
+        R3 = Amount of memory to keep even when another task is attempting to
+             claim memory, or -1 to read the current value.
+        R4 = Amount of disc space to leave free, or -1 to read the current
+             value.
+    
+    On exit:
+    
+        R0 = Fraction of required memory to claim.
+        R1 = Minimum memory to claim, in bytes.
+        R2 = Maximum memory to claim, in bytes.
+        R3 = Memory to keep, in bytes.
+        R4 = Disc space to leave free, in bytes.
+
+    Interrupts:
+
+        Interrupt status is undefined.
+        Fast interrupts are enabled.
+
+    Processor mode:
+
+        Processor is in SVC mode.
+    
+    Re-entrancy:
+
+        SWI is not re-entrant.
+
+    Use:
+    
+        This call provides extra control over how much real memory and disc
+        space to claim. It is provided as a supplement to Virtualise_Configure
+        to provide extra configuration options while ensuring backwards
+        compatibility. Some of the values are adjusted by the user when the
+        bar in the Task Manager is dragged. These values are only guidelines.
+        More or less memory may be claimed depending upon other constraints.
+        
+        Do not rely on any particular default values. They may be altered by
+        another application, by the user dragging the bar in the Task
+        Manager, or they could change in a future release of this module.
+        
+        The amount of memory claimed is (approximately) chosen as follows:
+        
+            The amount of physical memory that could usefully be used to
+            cache virtual memory is calculated.
+            
+            This value is scaled by the specified fraction to obtain the
+            initial allocation.
+            
+            If the value is above the specified upper limit, then the upper
+            limit is used instead.
+            
+            If the value is below the specified lower limit, then the lower
+            limit is used instead.
+            
+            If the value is below the minimum amount to claim, then the
+            required minimum amount to claim is used instead.
+            
+            If the value does not leave the specified amount of memory free,
+            then the claimed amount is reduced as required.
+            
+            If the value is below the minimum memory to keep, then the
+            amount is increased to the minimum to keep.
+            
+            Other constraints, such as the number of locked pages and the
+            maximum memory that can be used, are then enforced.
+
+        The amount of memory to keep is also used to decide whether to reduce
+        the memory claimed when another task attempts to allocate memory.
+        
+        The disc space to leave free value allows disc space to be reserved
+        for other purposes, and to avoid problems with FileCore that can
+        result in corruption of the disc.
+
+        Be careful using this call. Inappropriate use could make virtual
+        memory use very inefficient.

@@ -1,0 +1,60 @@
+|   File        : !Run
+|   Date        : 14-Dec-99
+|   Author      : © A.Thoukydides, 1995, 1996, 1997, 1998, 1999, 2016
+|   Description : Start !Virtualis.
+|
+|   License     : Virtualise is free software: you can redistribute it and/or
+|                 modify it under the terms of the GNU General Public License
+|                 as published by the Free Software Foundation, either
+|                 version 3 of the License, or (at your option) any later
+|                 version.
+|
+|                 Virtualise is distributed in the hope that it will be useful,
+|                 but WITHOUT ANY WARRANTY; without even the implied warranty
+|                 of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+|                 the GNU General Public License for more details.
+|
+|                 You should have received a copy of the GNU General Public
+|                 License along with Virtualise. If not, see
+|                 <http://www.gnu.org/licenses/>.
+
+| Set a system variable to the application directory
+Set Virtualise$Dir <Obey$Dir>
+
+| Directory to contain configuration files
+If "<Virtualise$ConfigDir>" = "" Then SetMacro Virtualise$ConfigDir <Choices$Write>.Virtualise
+
+| Load the application sprites
+IconSprites <Virtualise$Dir>.!Sprites
+
+| Check that it is a sufficiently recent version of the operating system
+RMEnsure UtilityModule 3.50 Error 0 This application is only suitable for use with RISC OS 3.50 or later versions.
+
+| Ensure that there is sufficient memory
+WimpSlot -min 96K -max 96K
+
+| Special care needs to be taken over the C library
+Set Virtualise$CLibLoaded 1
+RMEnsure SharedCLibrary 0.00 Set Virtualise$CLibLoaded 0
+If Virtualise$CLibLoaded=1 Then RMEnsure SharedCLibrary 4.58 Error 0 You are already running a version of CLib which is too old. This application needs SharedCLibrary 4.58 or later.
+UnSet Virtualise$CLibLoaded
+
+| Ensure that the correct versions of modules are loaded
+Run <Virtualise$Dir>.Ensure SharedCLibrary 4.58 CLib
+Run <Virtualise$Dir>.Ensure FPEmulator     4.04 FPEmulator
+Run <Virtualise$Dir>.Ensure MessageTrans   0.28 MsgTrans
+Run <Virtualise$Dir>.Ensure ColourTrans    1.61 Colours
+Run <Virtualise$Dir>.Ensure Toolbox        1.36 Toolbox.Toolbox
+Run <Virtualise$Dir>.Ensure Iconbar        1.12 Toolbox.IconBar
+Run <Virtualise$Dir>.Ensure Menu           0.24 Toolbox.Menu
+Run <Virtualise$Dir>.Ensure ProgInfo       0.09 Toolbox.ProgInfo
+Run <Virtualise$Dir>.Ensure Window         1.31 Toolbox.Window
+
+| Load the current version of the Virtualise module
+RMEnsure Virtualise 1.17 Run <Virtualise$Dir>.Virtualise
+
+| Check again that there is sufficient memory to run
+WimpSlot -min 96K -max 96K
+
+| Finally start the application
+Run <Virtualise$Dir>.!RunImage %*0

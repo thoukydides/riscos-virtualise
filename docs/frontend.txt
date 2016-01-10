@@ -1,0 +1,515 @@
+File        : frontend.txt
+Date        : 14-Dec-99
+Author      : © A.Thoukydides, 1995, 1996, 1997, 1998, 1999, 2016
+Description : Description of the WIMP front-end "!Virtualis".
+
+License     : Virtualise is free software: you can redistribute it and/or
+              modify it under the terms of the GNU General Public License as
+              published by the Free Software Foundation, either version 3 of
+              the License, or (at your option) any later version.
+
+              Virtualise is distributed in the hope that it will be useful,
+              but WITHOUT ANY WARRANTY; without even the implied warranty of
+              MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+              GNU General Public License for more details.
+
+              You should have received a copy of the GNU General Public License
+              along with Virtualise. If not, see<http://www.gnu.org/licenses/>.
+
+
+INTRODUCTION
+
+This file is intended as a reference to all of the features included in the
+"!Virtualis" front-end. For a simple introduction read the "tutorial.txt" file.
+The front-end supports interactive help; use Acorn's !Help application to
+obtain information about the item under the mouse pointer.
+
+
+STARTING THE PROGRAM
+
+Start the front-end by simply double-clicking SELECT on the "!Virtualis" icon
+in a directory viewer. After a short delay the application icon will appear
+on the icon-bar.
+
+
+THE ICON BAR
+
+Clicking MENU on the icon which appears on the iconbar opens the main program
+menu which offers the following options:
+
+    Info            Moving over the sub-menu arrow displays a standard
+                    program information window. The version number should be
+                    the same as the version of the Virtualise module being
+                    used.
+                    
+    List areas...   This opens up a window giving details of all the dynamic
+                    areas in the machine, and allow various operations to be
+                    performed.
+
+    Page faults...  This opens up a window showing the number of page faults
+                    which have been serviced classified according to the type
+                    of instruction which generated the exception.
+                    
+    Configure...    This opens up a dialogue box which allows the Virtualise
+                    module to be configured.
+
+    Automatic...    This opens up a window listing the dynamic area names for
+                    which virtual memory will automatically be enabled when
+                    they are next created.
+
+    Tasks...        This opens up a window listing the current WIMP tasks,
+                    allowing specified tasks to be suspended and swapped to
+                    disc.
+                    
+    Quit            Quits the front-end program. The module is not affected.
+
+These options can be assigned to SELECT and ADJUST clicks on the iconbar
+icon.
+
+
+DYNAMIC AREA LIST WINDOW
+
+The dynamic area list window can be opened by either selecting the
+"List areas..." option from the icon-bar menu.
+
+The window which is opened displays details of all the dynamic areas which
+exist in the computer. This list is updated once per second on WIMP
+null-polls. Areas with numbers under 256 (those which are not listed as
+dynamic areas in the Taskmanager) are shaded. The columns of details are:
+
+    Name            The name of the dynamic area as displayed by the
+                    TaskManager or returned by OS_DynamicArea 2.
+                    
+    Number          The dynamic area number as used with OS_DynamicArea,
+                    OS_ReadDynamicArea and OS_ChangeDynamicArea.
+                    
+    Maximum         The maximum size (reserved logical address space) of the
+                    dynamic area.
+                    
+    Logical         The current logical size of the area, i.e. how much
+                    memory the user of the area thinks is being used.
+                    
+    Physical        The current physical size of the area, i.e. how much real
+                    memory is being used to support accesses to area. If the
+                    area has not got virtual memory enabled then it will be
+                    the same as the logical size.
+                    
+    VM              An indicator of whether virtual memory is enabled for the
+                    area.
+
+Unshaded areas may be selected by clicking with SELECT and ADJUST in the
+usual manner. Clicking Menu opens a menu that allows various operations to be
+performed. The options offered are:
+
+    Virtualise      Either enable or disable virtual memory for all of
+                    the selected dynamic areas. If any of the selected
+                    areas have virtual memory already enabled then a tick
+                    appears next to this item. This option is shaded if no
+                    areas are selected.
+    
+    Delete area...  Remove the selected dynamic areas. This option is shaded
+                    if no areas are selected. A dialogue box is opened to
+                    confirm the deletion.
+
+    Show map...     This opens a window for each selecting area showing the
+                    status of all the pages of memory within the areas.
+                    Double-clicking SELECT on a dynamic area entry has the
+                    same effect.
+    
+    Select all      This selects all of the dynamic areas.
+    
+    Clear selection This deselects any areas which are selected.
+
+The Virtualise and Remove options should obviously be used with care; it is
+very easy to crash the computer if these are used carelessly.
+
+If an application is dragged into the list window the "Modify application"
+dialogue box is opened. This is described in the next section.
+
+MODIFY APPLICATION DIALOGUE
+
+This allows the application to be modified so that it always uses virtual
+memory when it is run. A backup of the application should be made before
+using this option.
+
+The top of the window shows which application will be altered. The centre of
+the window controls the operation to perform:
+
+    Enable virtual memory by default
+    
+                    This option modifies the !Run file of the application to
+                    automatically enable virtual memory for the dynamic areas
+                    which are selected within the dynamic area list window.
+                    These should be the dynamic areas that are used by the
+                    application being modified. This will take effect the next
+                    time that the application is started. This option also
+                    copies the Virtualise module into the
+                    "!Boot.Choices.Boot.PreDesk" directory to ensure that it
+                    is always loaded.
+    
+    Size limit      This is the maximum size that will be set for the
+                    selected dynamic areas.
+    
+    Restore original !Run file
+    
+                    This attempts to restore the application to the state it
+                    was in before it was modified. Due to the way in which
+                    this operates it may not take effect until the next time
+                    the computer is reset.
+
+    Uninstall module
+    
+                    Selecting this option removes the Virtualise module from
+                    the boot sequence if it was previously installed by the
+                    enable virtual memory option.
+
+At the bottom of the window are two action buttons:
+
+    Cancel          Clicking on this icon aborts the modification, leaving
+                    the application unchanged. Pressing Escape has the same
+                    effect.
+    
+    OK              Clicking on this icon performs the selected modification.
+                    It is also possible to press Return to have the same
+                    effect.
+
+
+PAGE STATUS WINDOW
+
+Any number of page status windows may be opened. The main part of the window
+at the top contains a square for each page of memory within the dynamic area.
+The colour of the square indicates the state of that page. Clicking MENU
+within the window opens a menu:
+
+    Key...          A window showing the meaning of the different colours.
+
+    Zoom            A list of the possible scales at which the status display
+                    can be shown.
+
+The lower part of the window has an Update button which takes a new snapshot
+of the state of the dynamic area. Also shown is the dynamic area number and
+name.
+
+Note that the access count is only meaningful if the NFU page replacement
+policy is configured.
+
+
+CONFIGURATION WINDOW
+
+The configuration window is split into two areas. The scrollable area on the
+left displays all of the options that may be controlled. The area on the
+right contains three buttons:
+
+    Save            Save the values shown. These values will be used by both
+                    the Virtualise module and the "!Virtualis" front-end each
+                    time they are started in the future.
+    
+    Read current    Reads the current settings from the Virtualise module.
+                    The numerical values are rounded down to 0.1MB multiples
+                    before being displayed.
+    
+    Set new         Sets the values shown in the window. The settings are
+                    then read back and window updated.
+
+If the Virtualise module is not loaded the last two buttons will produce an
+error message.
+
+The section of the scrollable area entitled "Memory usage" shows each of the
+values which can be set using Virtualise_Configure, and one extra that can be
+set using Virtualise_UserConfigure. Note that these values can only be
+specified to the nearest 0.1MB due to the way in which the Toolbox system
+handles number range gadgets. The items are:
+
+    Claim up to     The amount of real memory to claim automatically for the
+                    virtual memory pool if it could be useful.
+
+    Keep below      The amount of real memory to keep even if other
+                    applications require more memory than is available.
+    
+    Leave free      The minimum amount of memory to leave free when the size
+                    of the virtual memory pool is adjusted.
+    
+    Size limit      The amount of logical address space reserved for dynamic
+                    areas if -1 is specified as the maximum size when they
+                    are created.
+
+The second section of the scrollable area entitled "Disc usage" controls the
+usage of disc space for swap files. The current version only has a single
+item:
+
+    Leave free      The amount of disc space to leave free when a swap file
+                    is either created or enlarged. This values may sometimes
+                    be exceeded due to the way in which disc space is
+                    allocated.
+
+The next section of the scrollable area entitled "Swap file directory" allows
+the directory used for storing swap files to be set. This sets the system
+variable Virtualise$SwapDir as a macro, so system variables (such as
+<Wimp$ScrapDir>) may be included. There are three ways of setting the
+directory: dragging the directory icon to a directory window, dragging a file
+or directory icon into the configuration window, or by typing the required
+pathname into the writable icon. Note that a change to the swap file
+directory only affects swap files created after the change has been made;
+existing swap files are not moved.
+
+This section of the window also conatins an option button. If the option is
+selected then the swap file directory will be purged each time the Virtualise
+module is loaded. This will delete any swap files that have been left from
+previous uses, and can prevent the disc being filled with unused files.
+
+The next section of the scrollable area entitled "Page replacement policy"
+sets the algorithm used to select pages to swap to disc. The current options
+are:
+
+    NFU             Not frequently used. This chooses the page that has been
+                    accessed the least frequently.
+    
+    FIFO            First-in, first-out. Pages are swapped out in the order
+                    they were originally swapped in. In other words this
+                    chooses the oldest page.
+    
+    Random          A page is chosen at random, irrespective of how recently
+                    or frequently it has been used.
+
+There are also two option buttons which control whether pages are read and
+written individually or grouped into larger file operations (which should
+be faster).
+
+The next section of the scrollable area entitled "Load module" controls
+whether the Virtualise module is loaded within the !Boot sequence. The
+options are:
+
+    In !Boot sequence
+    
+                    When this option is selected, the Virtualise module will
+                    be placed into the "!Boot.Choices.Boot.PreDesk" directory
+                    to ensure that it is always loaded.
+    
+    When !Virtualis is run
+    
+                    When this option is selected, any copy of Virtualise in
+                    the "!Boot.Choices.Boot.PreDesk" directory will be
+                    deleted. The module will then only be loaded when the
+                    !Virtualis front-end is run.
+
+The final section of the scrollable area entitled "Iconbar clicks" allows
+actions to be assigned to SELECT and ADJUST clicks on the iconbar icon. The
+options are the same as those available from the iconbar icon menu.
+
+
+PAGE FAULTS WINDOW
+
+The "Number of page faults" window is opened by selecting the
+"Page faults..." option from the icon-bar menu. The window displays the
+numbers of virtual memory page faults which were generated by different
+classes of instruction since the module was loaded.
+
+Note that page faults generated by floating point processor instructions will
+only be listed under "Coprocessor data transfer" if a real floating point
+unit is being used. If Acorn's Floating Point Emulator is being used then it
+will be an instruction within the emulator code which actually generates the
+exception.
+
+
+AUTOMATIC VIRTUAL MEMORY WINDOW
+
+The automatic virtual memory list window is opened by selecting the
+"Automatic..." option from the icon-bar menu.
+
+The window which is opened lists the names of the dynamic areas for which
+virtual memory will be enabled by default. This operates by setting system
+variables as described in the "Module" file. This list is updated once per
+second on WIMP null-polls. The columns of details are:
+
+    Name            The name of the dynamic area as displayed by the
+                    TaskManager or returned by OS_DynamicArea 2. If a
+                    system variable corresponding to an unknown dynamic
+                    area then the capitalisation and special characters
+                    may not be exactly the same as the actual dynamic area
+                    name.
+
+    Size limit      The maximum size (reserved logical address space) that
+                    should be allocated for the dynamic area if no limit is
+                    specified by the program that creates it.
+
+Dynamic area names may be selected by clicking with SELECT and ADJUST in the
+usual manner. Clicking Menu opens a menu that allows various operations to be
+performed. The options offered are:
+
+    Size limit
+    
+    Add area        The sub-menu lists all the names of dynamic areas that
+                    have been seen by the "!Virtualis" front-end. Select
+                    the name of a dynamic area to add it to the list. It is
+                    initially added with a size limit of 256MB. The list of
+                    known dynamic areas is saved betweed sessions.
+    
+    Remove area     Remove the selected dynamic area names from the list.
+                    This also unsets the corresponding system variables.
+    
+    Save            Save a list of the current settings.  This option also
+                    copies the Virtualise module into the
+                    "!Boot.Choices.Boot.PreDesk" directory to ensure that it
+                    is always loaded. The file of dynamic areas is read by
+                    the Virtualise module each time it is loaded. Hence once
+                    the use of virtual memory has been configured, it is not
+                    necessary to use the "!Virtualis" front-end.
+
+    Select all      This selects all of the dynamic areas.
+    
+    Clear selection This deselects any areas which are selected.
+
+
+TASK SWAPPER WINDOW
+
+The task swapper window is opened by selecting the "Tasks..." option from the
+icon-bar menu.
+
+The window which is opened lists the names of the WIMP tasks running within
+the computer. The columns of details are:
+
+    Task            The name of the task, as displayed in the TaskManager
+                    window.
+                    
+    Size            The size of the task, either in memory or on disc. For
+                    active tasks this is the same as the figure displayed by
+                    the TaskManager.
+
+    Disc            An indicator of whether the task has been swapped to
+                    disc.
+
+Clicking on a task within the window attempts to suspend the task, and swap
+it to disc. Clicking on a suspended task attempts to reload it and resume
+execution. If ADJUST is used, instead of SELECT, then the window is also
+closed.
+
+When a task is suspened, any open windows belonging to the task are closed,
+    
+                    When this option is selected, the Virtualise module will
+                    be placed into the "!Boot.Choices.Boot.PreDesk" directory
+                    to ensure that it is always loaded.
+    
+    When !Virtualis is run
+    
+                    When this option is selected, any copy of Virtualise in
+                    the "!Boot.Choices.Boot.PreDesk" directory will be
+                    deleted. The module will then only be loaded when the
+                    !Virtualis front-end is run.
+
+The final section of the scrollable area entitled "Iconbar clicks" allows
+actions to be assigned to SELECT and ADJUST clicks on the iconbar icon. The
+options are the same as those available from the iconbar icon menu.
+
+
+PAGE FAULTS WINDOW
+
+The "Number of page faults" window is opened by selecting the
+"Page faults..." option from the icon-bar menu. The window displays the
+numbers of virtual memory page faults which were generated by different
+classes of instruction since the module was loaded.
+
+Note that page faults generated by floating point processor instructions will
+only be listed under "Coprocessor data transfer" if a real floating point
+unit is being used. If Acorn's Floating Point Emulator is being used then it
+will be an instruction within the emulator code which actually generates the
+exception.
+
+
+AUTOMATIC VIRTUAL MEMORY WINDOW
+
+The automatic virtual memory list window is opened by selecting the
+"Automatic..." option from the icon-bar menu.
+
+The window which is opened lists the names of the dynamic areas for which
+virtual memory will be enabled by default. This operates by setting system
+variables as described in the "Module" file. This list is updated once per
+second on WIMP null-polls. The columns of details are:
+
+    Name            The name of the dynamic area as displayed by the
+                    TaskManager or returned by OS_DynamicArea 2. If a
+                    system variable corresponding to an unknown dynamic
+                    area then the capitalisation and special characters
+                    may not be exactly the same as the actual dynamic area
+                    name.
+
+    Size limit      The maximum size (reserved logical address space) that
+                    should be allocated for the dynamic area if no limit is
+                    specified by the program that creates it.
+
+Dynamic area names may be selected by clicking with SELECT and ADJUST in the
+usual manner. Clicking Menu opens a menu that allows various operations to be
+performed. The options offered are:
+
+    Size limit
+    
+    Add area        The sub-menu lists all the names of dynamic areas that
+                    have been seen by the "!Virtualis" front-end. Select
+                    the name of a dynamic area to add it to the list. It is
+                    initially added with a size limit of 256MB. The list of
+                    known dynamic areas is saved betweed sessions.
+    
+    Remove area     Remove the selected dynamic area names from the list.
+                    This also unsets the corresponding system variables.
+    
+    Save            Save a list of the current settings.  This option also
+                    copies the Virtualise module into the
+                    "!Boot.Choices.Boot.PreDesk" directory to ensure that it
+                    is always loaded. The file of dynamic areas is read by
+                    the Virtualise module each time it is loaded. Hence once
+                    the use of virtual memory has been configured, it is not
+                    necessary to use the "!Virtualis" front-end.
+
+    Select all      This selects all of the dynamic areas.
+    
+    Clear selection This deselects any areas which are selected.
+
+
+TASK SWAPPER WINDOW
+
+The task swapper window is opened by selecting the "Tasks..." option from the
+icon-bar menu.
+
+The window which is opened lists the names of the WIMP tasks running within
+the computer. The columns of details are:
+
+    Task            The name of the task, as displayed in the TaskManager
+                    window.
+                    
+    Size            The size of the task, either in memory or on disc. For
+                    active tasks this is the same as the figure displayed by
+                    the TaskManager.
+
+    Disc            An indicator of whether the task has been swapped to
+                    disc.
+
+Clicking on a task within the window attempts to suspend the task, and swap
+it to disc. Clicking on a suspended task attempts to reload it and resume
+execution. If ADJUST is used, instead of SELECT, then the window is also
+closed.
+
+When a task is suspened, any open windows belonging to the task are closed,
+and any icons on the icon-bar are replaced. The task may be resumed by
+clicking on any of the replacement icon-bar icons.
+
+If it is not possible to restore a task, for example if there is insufficient
+memory, then an error is displayed. This offers the following options:
+
+    Cancel          Close the error window, and leave the task suspended.
+    
+    Kill Task       Stop the task immediately. This does not exit the task
+                    normally, so should only be used as a last resort.
+
+If an attempt is made to exit the desktop while a task is swapped out, an
+error dialogue is displayed, and the following options are offered:
+
+    Restore         Attempt to swap the task back. The shutdown is aborted.
+
+    Abort           Abandon the shutdown, and leave the task suspended.
+    
+    Shutdown        Kill the task, and resume the shutdown. The task is not
+                    exited normally, so this should only be used as a last
+                    resort.
+
+Not all tasks can be safely swapped out - if in doubt, save any important
+data (in all applications) before trying to suspend the task. Programs with
+filters applied are likely to cause problems.

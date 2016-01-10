@@ -1,0 +1,157 @@
+File        : tutorial.txt
+Date        : 14-Dec-99
+Author      : © A.Thoukydides, 1995, 1996, 1997, 1998, 1999, 2016
+Description : A simple introduction to some of the more useful features of
+              the WIMP front-end.
+
+License     : Virtualise is free software: you can redistribute it and/or
+              modify it under the terms of the GNU General Public License as
+              published by the Free Software Foundation, either version 3 of
+              the License, or (at your option) any later version.
+
+              Virtualise is distributed in the hope that it will be useful,
+              but WITHOUT ANY WARRANTY; without even the implied warranty of
+              MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+              GNU General Public License for more details.
+
+              You should have received a copy of the GNU General Public License
+              along with Virtualise. If not, see<http://www.gnu.org/licenses/>.
+
+
+INTRODUCTION
+
+This file provides a relatively straightforward introduction to using the
+Virtualise system to provide virtual memory for existing applications. A
+reference guide to all aspects of the program are included in the
+"frontend.txt" file.
+
+It is assumed that you know how to use the mouse and windows environment on
+your RiscPC computer. If this is not the case then please read the Welcome
+guide which came with your computer before continuing.
+
+
+INSTALLING SYSTEM RESOURCES
+    
+Before the program will run it is necessary to merge the supplied !System
+folder with the one on your RiscPC's hard disc. The following steps should be
+performed to achieve this. Double-click SELECT on the "!Boot" icon in the
+root directory of your hard disc. This will open the "Configuration" window.
+Clicking SELECT on the "System" icon will then open another window. Drag the
+!System directory from the installation disc to this new window. After a few
+seconds of disc activity the update should be complete.
+
+
+STARTING THE FRONT-END
+
+The front-end supports interactive help; use Acorn's !Help to obtain
+information about the item under the mouse pointer. After a brief delay the
+title window will open (showing the software version number and your
+registration details) and the application icon will appear on the icon-bar.
+
+
+CONFIGURING THE VIRTUAL MEMORY
+
+Click ADJUST on the !Virtualis icon on the icon-bar. This will open the
+"Virtualise configuration window". The most important settings are the
+three numbers at the top of the window which control memory usage of the
+virtual memory system:
+
+    Claim up to     The amount of real memory to use. Larger values (up to
+                    the total memory in the computer) speed up most programs
+                    that use virtual memory by reducing the number of disc
+                    accesses required.
+    
+    Leave free      The minimum amount of memory to leave free. When memory
+                    is required for another task the virtual memory system
+                    will attempt to change its usage to ensure that the
+                    specified amount is left unused.
+    
+    Size limit      Many programs do not specify a maximum size for dynamic
+                    areas they create. In such cases the operating system
+                    normally sets the maximum size to be the same as the
+                    amount of memory in the computer. If virtual memory is
+                    going to be used this becomes very restrictive since the
+                    maximum size can not be extended after the area has been
+                    created. This option allows a different maximum size of
+                    be used.
+                    
+Note that these values can only be specified to the nearest 0.1MB. The other
+options within the window are described in the "FrontEnd" file.
+
+To ensure that these values are used the next time !Virtualis is started
+click SELECT on the "Save icon" at the bottom of the window. Then click
+SELECT on the "Set new" icon at the bottom of the window to use the values
+shown.
+
+
+ENABLING VIRTUAL MEMORY FOR AN APPLICATION
+
+Click SELECT on the !Virtualis icon to open a window listing all of the
+dynamic areas in the computer. There is quite a lot of information in the
+window, but for now only the names of the dynamic areas down the left-hand
+side are important. All of the values are explained in the "FrontEnd" file.
+Click on the toggle size icon in the top-right-hand corner to expand the
+window to its full size.
+
+Next load (in the usual way) the application which you wish to use virtual
+memory with, e.g. !ChangeFSI which is supplied with the computer. Find the
+entries for the dynamic areas created by the application you have started,
+and select them by clicking SELECT on the first one, and ADJUST for each
+subsequent dynamic area.
+
+If you are using !ChangeFSI then the relevant areas are only created when a
+file is loaded. Drag a file to the !ChangeFSI icon, and after the window has
+opened there will be a "ChangeFSI sprite" dynamic area created.
+
+When all of the required dynamic areas have been selected click MENU within
+the window. From the menu that appears select the "Virtualise" option to
+enable virtual memory. If an error box is produced then it may not be
+possible to enable virtual memory for one or more of the selected areas. If
+all goes well, a tick will appear in the right-hand column of the table for
+the selcted areas.
+
+That is all that is required to use virtual memory. However, for some
+applications it is even easier; see the "Products" file for more details.
+
+
+MODIFYING AN APPLICATION TO USE VIRTUAL MEMORY BY DEFAULT
+
+To remove the need to enable virtual memory for an application by hand every
+time it is used it is possible to modify the application to use virtual
+memory automatically. A backup copy should be made of the application before
+doing this.
+
+Ensure that the required dynamic areas are selected within the list window,
+and drag the application to modify from its directory viewer into the list
+window. This will open the "Modify application" window. Click on "Enable
+virtual memory by default" and adjust the "Size limit" to the required
+maximum dynamic area size. Finally click on OK to perform the modify the
+application. The change will take effect the next time the application is
+run.
+
+Note that modifying an application also installs the module into the
+computer's boot sequence so that it is loaded every time the computer is
+started or reset.
+
+To remove the modification drag the application icon into the list window
+again, and select the "Restore original !Run file option". This will only
+take effect after the computer has next been reset. It is also possible to
+choose whether the module should be removed from the boot sequence by
+selecting the "Uninstall module option".
+
+
+QUITTING THE FRONT-END
+
+When it is no longer required the front-end can be quit by selecting the
+"Quit" option from the icon-bar menu. This does not affect the module which
+provides the virtual memory, so it is safe to do this even if virtual memory
+is being used by another application.
+
+
+OTHER FEATURES
+
+This tutorial has only skimmed the surface of what the Virtualise system can
+do. For more details read the relevant sections of the documentation, e.g.
+"frontend.txt" for an explanation of the other features offered by the
+front-end, or "module.txt" for more technical details about the Virtualise
+module itself.

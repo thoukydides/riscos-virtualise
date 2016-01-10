@@ -1,0 +1,224 @@
+File        : versions.txt
+Date        : 14-Dec-99
+Author      : © A.Thoukydides, 1995, 1996, 1997, 1998, 1999, 2016
+Description : The version history for the Virtualise module and front-end.
+              Read this if you are upgrading from an earlier version to
+              discover what has changed.
+
+License     : Virtualise is free software: you can redistribute it and/or
+              modify it under the terms of the GNU General Public License as
+              published by the Free Software Foundation, either version 3 of
+              the License, or (at your option) any later version.
+
+              Virtualise is distributed in the hope that it will be useful,
+              but WITHOUT ANY WARRANTY; without even the implied warranty of
+              MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+              GNU General Public License for more details.
+
+              You should have received a copy of the GNU General Public License
+              along with Virtualise. If not, see<http://www.gnu.org/licenses/>.
+
+
+ACKNOWLEDGEMENTS
+
+I would like to the thank the following people and organisations for their
+contributions to the development of this module:
+
+    Acorn Computers     - The RiscPC, RISC OS and the ObjAsm assembler.
+    Tim Armes           - Hints about how Straylight approached the problems.
+    Richard Barlow      - Patience while an obscure bug was fixed.
+    Dave Clare          - The idea and incentive behind this module.
+    Aidan Corey         - Volunteering to test a potentially dangerous program.
+    Jonathan Coxhead    - For maintaining OSLib even though not at Acorn now.
+    Robert Davison      - The stunning Compo, useful bug reports and comments.
+    David Jackson       - Many bug reports and more ideas for the interface.
+    Dominic Symes       - The brilliant !Zap editor; get a copy immediately.
+    Robin Watts         - !Larger, the greatest backdrop program ever.
+
+
+VERSION HISTORY
+
+0.00 (17-Aug-95)    Original development version.
+
+0.01 (31-Aug-95)    Added support for file operations. Attempts to reopen swap
+                    file if closed.
+
+0.02 (01-Sep-95)    Large file operations split so that they can be performed
+                    using less physical memory.
+
+0.03 (02-Sep-95)    Minimise area size before disabling virtual memory when
+                    dynamic area removed without explicit call to end.
+                    Fixed bug which surfaced when a memory access crosses a
+                    page boundary and first page is already in memory.
+                    Use transient CallBacks to optimise amount of memory used.
+                    Interrupts disabled for more of Data abort handler to
+                    cure (hopefully) spurious machine crashes.
+
+0.04 (02-Sep-95)    Intercepts OS_ChangeDynamicArea and OS_DynamicArea to
+                    reduce number of changes required to existing code.
+                    Allows dynamic areas larger than memory to be created.
+
+0.05 (03-Sep-95)    Disc operations minimized by tracking unused pages.
+                    Pages swapped over in memory, rather than via swap file.
+                    Page replacement policy changed from "first-in, first-out"
+                    (FIFO) to "not frequently used" (NFU) with ageing.
+                    Checks system variables to allow applications to use
+                    virtual memory without any modifications.
+
+0.06 (05-Sep-95)    Minor bug fixes. Optional debugging code included in
+                    source code.
+
+0.07 (07-Sep-95)    Reduced length of time for which interrupts disabled.
+                    Corrected problem with virtual memory being left active
+                    after dynamic areas removed during shutdown.
+                    Included configuration for both RISC OS 3.5 and 3.6.
+
+0.08 (07-Sep-95)    Corrected problem with OS_ValidateAddress when R0 = R1.
+                    Fixed bug when OS_ChangeDynamicArea called with R1 = 0.
+                    OS_ReadDynamicArea is now also intercepted.
+
+0.09 (09-Sep-95)    Tidied up RISC OS internal SWI intercept code.
+                    Added support for dynamic areas with handlers.
+                    Enabled virtual memory for areas with a draggable bar.
+
+0.10 (09-Sep-95)    Improved algorithm for choosing amount of memory to claim.
+                    Changed useage of Virtualise_Configure.
+                    Automatically releases memory if required for other uses.
+                    Fixed error text which was not passed though MessageTrans.
+
+0.11 (13-Sep-95)    Corrected handling of dynamic area handlers.
+                    Improved text of error message.
+                    Fixed infinite loop if area resized with no virtual areas.
+                    Corrected writeback to SVC26 mode r13 and r14.
+
+0.12 (14-Sep-95)    OS_File operations now return correct load address.
+
+0.13 (15-Sep-95)    OS_File write operations now correctly stamp files.
+                    Corrected dynamic area handler interception for when
+                    handler takes area base address as workspace pointer.
+                    Only intercept handler if flags suitable for virtualising.
+
+0.14 (17-Sep-95)    Handle pages being swapped on mode changes.
+                    Area with top bit set base address disables virtual memory.
+                    Different defaults for memory to claim automatically.
+
+0.15 (21-Sep-95)    Fixed units used for maximum area size to Virtualise_Start.
+                    Do not give away memory below the minimum specified.
+                    Reduced default usage count for locked pages.
+                    Only remap memory pages if not already at correct address.
+                    Attempts to write neighbouring pages at same time.
+                    Fixed bug with page locking for low memory loads and saves.
+
+0.16 (22-Sep-95)    Corrected handling of zero values to Virtualise_Configure.
+                    Incorporated official Acorn allocation of resources.
+
+0.17 (26-Sep-95)    Pages not written to swap file when dynamic area removed.
+                    Mask out special flag bit when returned by RISC OS.
+                    Range checks parameters to Virtualise_Configure.
+                    Prevents the virtual pool from being deleted.
+                    Added Virtualise_MiscOp to support external interrogation.
+
+0.18 (28-Sep-95)    Extending area size only allocates space rather than
+                    setting extent which fills the file with zeros.
+
+0.19 (01-Oct-95)    Locking virtual memory keeps data in memory if possible.
+                    Corrected memory usage when shrink of VM pool is aborted.
+                    Most suitable pages swapped when VM pool size reduced.
+                    Replacement policy selectable between NFU, FIFO and random.
+                    Swap file directory can be set by a system variable.
+                    Page swapping grouped into multiple page file operations.
+
+0.20 (02-Oct-95)    Multiple page reads handled better when area fragmented.
+                    Defaults to random page replacement policy.
+                    Fixed corruption of registers when virtual area deleted.
+
+0.21 (04-Oct-95)    OS_File used to create swap file when VM enabled.
+                    Quicker approach used to extend swap file from zero size.
+                    Fixed corruption of registers with virtualised OS_GBPB.
+                    Improved control over multiple page read/write operations.
+                    
+0.22 (07-Oct-95)    Added page status display to desktop front-end.
+                    Improved alignment of multiple page write operations.
+                    Multiple page read/write operations are optional.
+                    More accidental register corruption now removed.
+                    Virtualise_Lock now locks the correct number of pages.
+
+0.23 (12-Oct-95)    Added Clares registration window to front-end.
+                    Changed default to single page read and write operations.
+                    OS_Find 0 now takes effect and swap files are reopened.
+
+0.24 (14-Oct-95)    Front-end can now modify application !Run files.
+                    Error boxes now show application sprite.
+                    Title window now uses application sprite area.
+
+0.25 (19-Oct-95)    Swap files are reopened after OS_FSControl 22 and 23.
+                    Title window is centred in all screen modes.
+                    Multiple page reads and writes are again the default.
+                    Front-end rounds values in number range gadgets better.
+                    DesktopSave protocol supported to load front-end.
+                    Option in front-end to save configuration.
+
+0.26 (20-Oct-95)    OS_FSControl 23 no longer hangs computer.
+
+0.27 (21-Oct-95)    Remove area menu option renamed to reduce accidental use.
+                    Corrected disc protection.
+                    Code to change swap file size simplified.
+                    Corruption of registers when area resized corrected.
+
+1.00 (21-Oct-95)    First official release version.
+
+1.01 (03-Dec-95)    Fixed error handling when out of disc space.
+                    Handling of errors during creation of area handled better.
+                    No longer locks pages used by OS_FSControl 4.
+                    Front-end handles unexpected errors better.
+                    Redraw of page status window speeded up.
+                    Page status display is scalable.
+
+1.02 (08-Jan-96)    Robust handling of flags on entry to file system intercepts.
+
+1.03 (31-Jan-96)    Modified !Run files pass on original parameters.
+
+1.04 (07-Mar-96)    Configuration file moved to <Choices$Write>.Virtualise.
+                    Added editor for automatic virtual memory system variables.
+                    Module reads configuration without front-end being run.
+
+1.05 (10-Apr-96)    Added ability to swap complete tasks to disc.
+                    Changed Yes/No indicators to use ticks.
+
+1.06 (14-May-96)    Fixed handling of dismounts.
+
+1.10 (08-Aug-96)    Made StrongARM compatible.
+                    A dialogue box is used to check deleting a dynamic area.
+                    Added VirtualCheck command to verify module consistency.
+                    Improved handling of OS_Heap operations in virtual memory.
+                    New look title window.
+
+1.11 (12-Sep-96)    Added Virtualise_UserConfigure SWI.
+                    New look configuration window.
+                    Enhanced memory claim options, and new defaults.
+                    Action taken on iconbar icon clicks now configurable.
+                    Option added to purge the swap file directory when loaded.
+
+1.12 (25-Jan-97)    Prevent !Virtualis front-end being swapped out.
+                    System variable size limit only used if none from SWI.
+                    Configuration file correctly terminated with a newline.
+                    Corrected automatic processor recognition.
+
+1.13 (01-Apr-97)    Kludge around bug in revisions less than 3 of SA110.
+
+1.14 (15-Oct-97)    The "keep below" value is used when adjusting the pool size.
+                    Free disk space option is ignored when used with networks.
+
+1.15 (27-May-99)    Fixed the free disk space check with large (>2GB) drives.
+                    Cured spurious crashes when virtual memory pool shrunk.
+                    Fixed rare corruption of the relocatable module area.
+                    Corrected order of loading of Toolbox modules.
+                    More efficient service call handling under Ursula.
+                    Corrected creation of non-empty areas with handlers.
+                    Fixed incorrect stack handling in configuration SWI veneer.
+
+1.16 (23-Aug-99)    Added basic support for RISC OS 4.
+                    Corrected behaviour if no configuration file found.
+                    Corrected validation of address ranges that wrap.
+
+1.17 (14-Dec-99)    Processor flags preserved across filesystem SWI calls.
